@@ -7,12 +7,50 @@ import { FileService } from './app/file.service';
 @Component({
   selector: 'app-root',
   template: `
-    <div class="container">
-      <h1>Secure File Encryption Service</h1>
+   <div class="container">
+      <!-- Home Banner -->
+      <div class="home-banner">
+        <div class="banner-content">
+          <h1>Malware Detection System</h1>
+          <p class="tagline">Secure. Reliable. Intelligent.</p>
+        </div>
+      </div>
+      
+      <!-- Introduction -->
+      <div class="introduction-section">
+        <h2>About Malware Detection</h2>
+        <p>
+          Our advanced malware detection system uses cutting-edge machine learning algorithms to identify and 
+          neutralize threats before they can compromise your system. By analyzing file signatures, behavior patterns, 
+          and code structure, we can detect even the most sophisticated malware variants.
+        </p>
+        <p>
+          Upload any suspicious file to our secure platform, and our system will scan it for potential threats, 
+          including viruses, trojans, ransomware, spyware, and other malicious software. Protect your valuable 
+          data with our state-of-the-art malware detection technology.
+        </p>
+        <div class="feature-highlights">
+          <div class="feature">
+            <span class="feature-icon">🔍</span>
+            <h3>Deep Scanning</h3>
+            <p>Thorough analysis of file contents and behavior</p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🔐</span>
+            <h3>Secure Processing</h3>
+            <p>Files are processed in a secure sandbox environment</p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">⚡</span>
+            <h3>Fast Results</h3>
+            <p>Get detection results in seconds</p>
+          </div>
+        </div>
+      </div>
       
       <!-- File Upload Section -->
       <div class="upload-section">
-        <h2>Upload Your File</h2>
+        <h2>Upload File for Analysis</h2>
         <div class="file-input-wrapper">
           <input 
             type="file" 
@@ -36,7 +74,7 @@ import { FileService } from './app/file.service';
           [disabled]="!selectedFile || isUploading"
         >
           <span *ngIf="isUploading" class="loading"></span>
-          {{ isUploading ? 'Encrypting...' : 'Encrypt & Upload' }}
+          {{ isUploading ? 'Analyzing...' : 'Scan for Malware' }}
         </button>
       </div>
 
@@ -55,9 +93,9 @@ import { FileService } from './app/file.service';
         {{ message }}
       </div>
 
-      <!-- Encrypted File Section -->
+      <!-- Results Section -->
       <div *ngIf="encryptedFileName" class="encrypted-file">
-        <h3>Encrypted File Ready</h3>
+        <h3>Scan Results</h3>
         <div class="file-info">
           <div>
             <strong>File:</strong> {{ encryptedFileName }}
@@ -68,7 +106,7 @@ import { FileService } from './app/file.service';
             [disabled]="isDownloading"
           >
             <span *ngIf="isDownloading" class="loading"></span>
-            {{ isDownloading ? 'Downloading...' : 'Download Encrypted File' }}
+            {{ isDownloading ? 'Downloading...' : 'Download Scan Report' }}
           </button>
         </div>
       </div>
@@ -129,7 +167,7 @@ export class App {
       error: (error) => {
         clearInterval(progressInterval);
         this.uploadProgress = 0;
-        this.message = error.error.message || 'An error occurred during upload';
+        this.message = error.error.message || 'An error occurred';
         this.error = true;
         this.isUploading = false;
       }
@@ -144,10 +182,11 @@ export class App {
     this.fileService.downloadFile(this.encryptedFileName).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = this.encryptedFileName!;
-        link.click();
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.encryptedFileName || 'scan-report.pdf';
+        document.body.appendChild(a);
+        a.click();
         window.URL.revokeObjectURL(url);
         this.isDownloading = false;
       },
@@ -158,6 +197,7 @@ export class App {
       }
     });
   }
+
 }
 
 bootstrapApplication(App);

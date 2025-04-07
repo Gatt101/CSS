@@ -7,6 +7,102 @@ body {
   min-height: 100vh;
   line-height: 1.6;
 }
+/* Banner styles */
+.home-banner {
+  background: linear-gradient(135deg, #3a4d8f 0%, #1e2a5a 100%);
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(30, 42, 90, 0.2);
+}
+
+.home-banner:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%23ffffff" stroke-width="0.5" stroke-opacity="0.1"/></svg>');
+  opacity: 0.1;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 1;
+}
+
+.home-banner h1 {
+  color: white;
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tagline {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-bottom: 0;
+}
+
+/* Introduction section */
+.introduction-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.introduction-section p {
+  color: #4b5563;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.feature-highlights {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.feature {
+  flex: 1;
+  min-width: 200px;
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.feature h3 {
+  color: #1e293b;
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.feature p {
+  color: #64748b;
+  margin: 0;
+  font-size: 0.9rem;
+}
 
 .container {
   max-width: 800px;

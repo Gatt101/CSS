@@ -3,8 +3,11 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 import os
 import hashlib
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ENCRYPTED_FOLDER'] = 'encrypted'
 app.config['DECRYPTED_FOLDER'] = 'decrypted'
@@ -65,6 +68,34 @@ def upload_file():
         'message': 'File encrypted successfully.',
         'filename': encrypted_filename
     }), 200
+
+
+def decrypt_data(key, data):
+    iv = data[:AES.block_size]
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    decrypted = cipher.decrypt(data[AES.block_size:])
+    return decrypted.rstrip(b"\0")
+
+
+@app.route('/decrypt/<filename>', methods=['GET'])
+def decrypt_file(filename):
+    encrypted_path = os.path.join(app.config['ENCRYPTED_FOLDER'], filename)
+
+    if not os.path.exists(encrypted_path):
+        return jsonify({'error': 'File not found'}), 404
+
+    with open(encrypted_path, 'rb') as f:
+        encrypted_data = f.read()
+
+    key = generate_aes_key()
+    decrypted_data = decrypt_data(key, encrypted_data)
+    decrypted_filename = f'decrypted_{filename}'
+    decrypted_path = os.path.join(app.config['DECRYPTED_FOLDER'], decrypted_filename)
+
+    with open(decrypted_path, 'wb') as f:
+        f.write(decrypted_data)
+
+    return send_from_directory(app.config['DECRYPTED_FOLDER'], decrypted_filename, as_attachment=True)
 
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
