@@ -15,7 +15,8 @@ import { FileService } from './app/file.service';
           <p class="tagline">Secure. Reliable. Intelligent.</p>
         </div>
       </div>
-      
+     
+     
       <!-- Introduction -->
       <div class="introduction-section">
         <h2>About Malware Detection</h2>
@@ -68,13 +69,13 @@ import { FileService } from './app/file.service';
           <div>Size: {{ formatFileSize(selectedFile.size) }}</div>
         </div>
 
-        <button 
-          class="btn btn-primary" 
-          (click)="uploadFile()" 
-          [disabled]="!selectedFile || isUploading"
+        <button
+            class="btn btn-primary"
+            (click)="uploadFile()"
+            [disabled]="!selectedFile || isUploading"
         >
           <span *ngIf="isUploading" class="loading"></span>
-          {{ isUploading ? 'Analyzing...' : 'Scan for Malware' }}
+          {{ isUploading ? 'Encrypting...' : 'Encrypt & Upload' }}
         </button>
       </div>
 
@@ -93,24 +94,35 @@ import { FileService } from './app/file.service';
         {{ message }}
       </div>
 
-      <!-- Results Section -->
-      <div *ngIf="encryptedFileName" class="encrypted-file">
-        <h3>Scan Results</h3>
-        <div class="file-info">
-          <div>
-            <strong>File:</strong> {{ encryptedFileName }}
-          </div>
-          <button 
-            class="btn btn-primary" 
-            (click)="downloadFile()"
-            [disabled]="isDownloading"
-          >
-            <span *ngIf="isDownloading" class="loading"></span>
-            {{ isDownloading ? 'Downloading...' : 'Download Scan Report' }}
-          </button>
-        </div>
-      </div>
-    </div>
+     <!-- Results Section -->
+     <div *ngIf="encryptedFileName" class="encrypted-file">
+       <h3>Scan Results</h3>
+       <div class="file-info">
+         <div>
+           <strong>File:</strong> {{ encryptedFileName }}
+         </div>
+         <div class="button-group">
+           <button
+             class="btn btn-primary"
+             (click)="downloadFile()"
+             [disabled]="isDownloading"
+         >
+           <span *ngIf="isDownloading" class="loading"></span>
+           {{ isDownloading ? 'Downloading...' : 'Download Encrypted File' }}
+         </button>
+
+           <button
+               class="btn btn-secondary"
+               (click)="decryptFile()"
+               [disabled]="isDecrypting"
+           >
+             <span *ngIf="isDecrypting" class="loading"></span>
+             {{ isDecrypting ? 'Decrypting...' : 'Decrypt File' }}
+           </button>
+         </div>
+       </div>
+     </div>
+   </div>
   `,
   imports: [CommonModule, HttpClientModule],
   providers: [FileService],
@@ -124,6 +136,8 @@ export class App {
   isUploading: boolean = false;
   isDownloading: boolean = false;
   uploadProgress: number = 0;
+  isDecrypting = false;
+
 
   constructor(private fileService: FileService) {}
 
@@ -142,6 +156,32 @@ export class App {
     this.uploadProgress = 0;
   }
 
+  decryptFile() {
+    if (!this.encryptedFileName) return;
+
+    this.isDecrypting = true;
+    this.fileService.decryptFile(this.encryptedFileName).subscribe({
+      next: (data: Blob) => {
+        const originalName = this.encryptedFileName!.replace('encrypted_', 'decrypted_');
+        const url = window.URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = originalName;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        this.message = 'File decrypted and downloaded successfully.';
+        this.error = false;
+        this.isDecrypting = false;
+      },
+      error: (err) => {
+        this.message = 'Error decrypting file: ' + (err.error?.message || 'Unknown error');
+        this.error = true;
+        this.isDecrypting = false;
+      }
+    });
+  }
   uploadFile() {
     if (!this.selectedFile) return;
 

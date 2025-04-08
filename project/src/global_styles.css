@@ -19,7 +19,20 @@ body {
   overflow: hidden;
   box-shadow: 0 15px 30px rgba(30, 42, 90, 0.2);
 }
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
 
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
 .home-banner:before {
   content: '';
   position: absolute;

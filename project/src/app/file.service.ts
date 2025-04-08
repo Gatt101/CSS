@@ -21,4 +21,10 @@ export class FileService {
       responseType: 'blob'
     });
   }
+
+  decryptFile(filename: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/decrypt/${filename}`, {
+      responseType: 'blob'
+    });
+  }
 }
