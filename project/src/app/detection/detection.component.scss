@@ -1,0 +1,74 @@
+.detection-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.upload-section {
+  margin-bottom: 20px;
+  border: 2px dashed #cbd5e1;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.result-card {
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #dee2e6;
+
+  &.danger {
+    background-color: #fff5f5;
+    border-color: #dc3545;
+    .result-header {
+      color: #dc3545;
+    }
+  }
+
+  &.warning {
+    background-color: #fff8e6;
+    border-color: #ffc107;
+    .result-header {
+      color: #856404;
+    }
+  }
+
+  &.safe {
+    background-color: #f0fff4;
+    border-color: #28a745;
+    .result-header {
+      color: #28a745;
+    }
+  }
+}
+
+.result-header {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.result-body {
+  p {
+    margin-bottom: 10px;
+  }
+}
+
+.list-group-item {
+  background-color: transparent;
+  border-left: none;
+  border-right: none;
+  padding: 10px 0;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.alert {
+  margin-top: 20px;
+} 
