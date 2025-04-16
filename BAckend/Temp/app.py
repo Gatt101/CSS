@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_file
 from Crypto.Cipher import AES
 import os
 import hashlib
@@ -6,6 +6,10 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/api', methods=['GET'])
+def api():
+    return jsonify({'message': 'Welcome to the File Encryption API!'})
 
 # Config paths
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -36,7 +40,7 @@ def encrypt_data(key, data):
     cipher = AES.new(key, AES.MODE_CBC)
     iv = cipher.iv
     encrypted = cipher.encrypt(pad(data))
-    return iv + encrypted  # Prepend IV to encrypted data
+    return iv + encrypted
 
 def decrypt_data(key, data):
     iv = data[:AES.block_size]
@@ -61,7 +65,7 @@ def upload_file():
         os.remove(file_path)
         return jsonify({'status': 'blocked', 'message': 'Malware detected and upload blocked.'}), 400
 
-    key = generate_aes_key()  # Using default static password
+    key = generate_aes_key()
     encrypted_data = encrypt_data(key, data)
     encrypted_filename = f'encrypted_{filename}'
     encrypted_path = os.path.join(app.config['ENCRYPTED_FOLDER'], encrypted_filename)
@@ -82,7 +86,8 @@ def download_file(filename):
     file_path = os.path.join(app.config['ENCRYPTED_FOLDER'], filename)
     if not os.path.exists(file_path):
         return jsonify({'error': 'File not found'}), 404
-    return send_from_directory(app.config['ENCRYPTED_FOLDER'], filename, as_attachment=True)
+
+    return send_file(file_path, as_attachment=True)
 
 @app.route('/decrypt/<filename>', methods=['GET'])
 def decrypt_file(filename):
@@ -97,7 +102,6 @@ def decrypt_file(filename):
     key = generate_aes_key()
     decrypted_data = decrypt_data(key, encrypted_data)
 
-    # Extract original name from "encrypted_filename.ext"
     original_filename = filename.replace("encrypted_", "", 1)
     decrypted_filename = f'decrypted_{original_filename}'
     decrypted_path = os.path.join(app.config['DECRYPTED_FOLDER'], decrypted_filename)
@@ -105,7 +109,26 @@ def decrypt_file(filename):
     with open(decrypted_path, 'wb') as f:
         f.write(decrypted_data)
 
-    return send_from_directory(app.config['DECRYPTED_FOLDER'], decrypted_filename, as_attachment=True)
+    return send_file(decrypted_path, as_attachment=True)
+
+# 📦 Analyze Endpoint (Used in Angular FileService)
+@app.route('/analyze', methods=['POST'])
+def analyze_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file uploaded'}), 400
+
+    file = request.files['file']
+    filename = file.filename
+    file_bytes = file.read()
+
+    # Basic simulated analysis
+    analysis = {
+        'filename': filename,
+        'size_bytes': len(file_bytes),
+        'contains_malware': scan_for_malware(file_bytes)
+    }
+
+    return jsonify(analysis), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
