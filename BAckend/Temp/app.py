@@ -9,7 +9,7 @@ CORS(app)
 
 @app.route('/api', methods=['GET'])
 def api():
-    return jsonify({'message': 'Welcome to the File Encryption API!'})
+    return jsonify({'message': 'Welcocme to the File Encryption API!'})
 
 # Config paths
 app.config['UPLOAD_FOLDER'] = 'uploads'

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FileService {
-  private apiUrl = 'http://127.0.0.1:5000';
+  private apiUrl = 'https://css-gatt101s-projects.vercel.app';
 
   constructor(private http: HttpClient) {}
 
