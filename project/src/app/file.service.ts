@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FileService {
-  private apiUrl = 'https://css-gatt101s-projects.vercel.app';
+  private apiUrl = 'https://css-xpyd.onrender.com';
 
   constructor(private http: HttpClient) {}
 
