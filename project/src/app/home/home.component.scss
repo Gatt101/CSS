@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .home-container {
   padding: 2rem 0;
 }
@@ -68,7 +70,7 @@
 .cta-section {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, darken(#4285f4, 10%) 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, #{color.adjust(#4285f4, $lightness: -10%)} 100%);
   border-radius: var(--border-radius);
   color: white;
   margin: 3rem 0;

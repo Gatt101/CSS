@@ -1,3 +1,5 @@
+@use "sass:color";
+
 /* Modern UI styles with enhanced visual design */
 body {
   font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -199,11 +201,11 @@ h2 {
 }
 
 .btn-primary {
-  background: var(--primary-color);
+  background: color.adjust(#4285f4, $lightness: -10%);
   color: white;
   
   &:hover {
-    background: darken(#4285f4, 10%);
+    background: color.adjust(#4285f4, $lightness: -20%);
     transform: translateY(-2px);
   }
 }
@@ -385,5 +387,21 @@ h2 {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+  }
+}
+
+.form-floating {
+  position: relative;
+  
+  label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 1rem 0.75rem;
+    pointer-events: none;
+    border: 1px solid transparent;
+    transform-origin: 0 0;
+    transition: opacity .1s ease-in-out,transform .1s ease-in-out;
   }
 }
